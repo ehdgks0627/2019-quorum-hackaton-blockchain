@@ -118,9 +118,9 @@ contract QelsToken is ERC20Interface, Owned {
 
 
     function transfer(address to, uint256 tokens) public returns (bool success) {
-        balances[msg.sender] = balances[msg.sender].sub(tokens);
+        balances[tx.origin] = balances[tx.origin].sub(tokens);
         balances[to] = balances[to].add(tokens);
-        emit Transfer(msg.sender, to, tokens);
+        emit Transfer(tx.origin, to, tokens);
         
         return true;
     }

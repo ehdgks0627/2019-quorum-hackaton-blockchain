@@ -59,7 +59,7 @@ contract ElsContract{
     }
     
     constructor(address _founder, address _investor, address _tokenAddr,string _secName, string _stockCode, uint256 _startPrice, uint8 _duesPerYear, uint8 _fundingYears,
-                uint256 _notionalAmount, uint256 _issueAmout, uint32 _issueDate, uint32 _paymentDate, uint32 _expiryDate, uint32 underPerPrice) public {
+                uint256 _notionalAmount, uint256 _issueAmout, uint32 _issueDate, uint32 _expiryDate, uint32 _underPerPrice) public {
         owner = msg.sender;
         founder = _founder;
         investor = _investor;
@@ -74,9 +74,10 @@ contract ElsContract{
         issueAmount = _issueAmout;
         issueDate = _issueDate;
         expiryDate = _expiryDate;
+        underPerPrice = _underPerPrice;
         
-   //     token.transfer(investor, issueAmount);
-   //     emit QelsTradeSet(secName, stockCode, startPrice, duesPerYear, notionalAmount, issueAmount, issueDate, expiryDate, underPerPrice);
+        token.transfer(investor, issueAmount);
+        emit QelsTradeSet(secName, stockCode, startPrice, duesPerYear, notionalAmount, issueAmount, issueDate, expiryDate, underPerPrice);
         emit QelsBuilt(founder, investor, token);
     }
     
@@ -85,18 +86,16 @@ contract ElsContract{
         uint256 gap;
         (isPlus, gap) = abs(startPrice, expirationPrice);
         
-        if(isPlus){
-            token.setTokenPerPrice(true, duesPerYear * fundingYears); // fund is up
+        if(isPlus){                         
+            token.setTokenPerPrice(true, (duesPerYear * fundingYears)); // fund is up
         }else{
             //fund is down
             if(gap >underPerPrice){ // fund is down underPerPrice
-                token.setTokenPerPrice(false, (gap*10));
+                token.setTokenPerPrice(false, (gap*10)); 
             }else{
                 token.setTokenPerPrice(true, duesPerYear * fundingYears);
             }
         }
     }
-    
-
 }
 
